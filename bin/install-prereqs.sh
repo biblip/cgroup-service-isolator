@@ -29,8 +29,16 @@ if [ ! -f /sys/fs/cgroup/cgroup.controllers ]; then
   fail "cgroups v2 not detected (missing /sys/fs/cgroup/cgroup.controllers)."
 fi
 
+if ! grep -qw memory /sys/fs/cgroup/cgroup.controllers; then
+  fail "cgroup v2 memory controller not available (memory not listed in /sys/fs/cgroup/cgroup.controllers)."
+fi
+
 if [ ! -f /sys/fs/cgroup/memory.max ]; then
-  fail "cgroup v2 memory controller not detected (missing /sys/fs/cgroup/memory.max)."
+  if [ -f /sys/fs/cgroup/system.slice/memory.max ]; then
+    echo "NOTE: /sys/fs/cgroup/memory.max is missing, but system.slice has memory.max; continuing." >&2
+  else
+    fail "cgroup v2 memory controller not detected (missing memory.max in root and system.slice)."
+  fi
 fi
 
 if [ ! -x /usr/bin/java ]; then
