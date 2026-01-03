@@ -40,6 +40,7 @@ need_cmd sed
 need_cmd awk
 need_cmd tr
 need_cmd mktemp
+need_cmd printf
 
 APP_NAME=""
 APP_USER=""
@@ -174,10 +175,6 @@ if [ -z "$JVM_FLAGS" ]; then
   JVM_FLAGS="-Xms256m -Xmx${JVM_XMX} -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=96m -XX:+ExitOnOutOfMemoryError"
 fi
 
-if [ -z "$APP_ARGS" ]; then
-  APP_ARGS='${APP_ARGS}'
-fi
-
 if [ -n "$EXEC_START" ] && [ -n "$JAR_SRC" ]; then
   fail "Do not use --exec with --jar; use --exec with --artifact for non-Java apps"
 fi
@@ -249,6 +246,26 @@ fi
 if [ -n "$ARGS_FILE" ]; then
   install -m 0644 -o root -g root "$ARGS_FILE" "/home/${APP_USER}/app/aia-remote.conf"
 fi
+
+if [ -n "$APP_ARGS" ]; then
+  printf "APP_ARGS=%q\n" "$APP_ARGS" > "/tmp/${APP_NAME}.aia-remote.conf"
+  install -m 0644 -o root -g root "/tmp/${APP_NAME}.aia-remote.conf" "/home/${APP_USER}/app/aia-remote.conf"
+  rm -f "/tmp/${APP_NAME}.aia-remote.conf"
+fi
+
+RUN_SH_TMP="$(mktemp)"
+cat > "$RUN_SH_TMP" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+APP_ARGS=""
+if [ -f "/home/${APP_USER}/app/aia-remote.conf" ]; then
+  # shellcheck source=/home/${APP_USER}/app/aia-remote.conf
+  . "/home/${APP_USER}/app/aia-remote.conf"
+fi
+exec ${EXEC_START} \${APP_ARGS:-}
+EOF
+install -m 0555 -o root -g root "$RUN_SH_TMP" "/home/${APP_USER}/app/run.sh"
+rm -f "$RUN_SH_TMP"
 
 if [ -z "$EXEC_START" ]; then
   fail "Unable to determine ExecStart; provide --jar or --exec/--artifact"

@@ -42,7 +42,7 @@ Note: On some AL2023 hosts, `/sys/fs/cgroup/memory.max` may be missing at the ro
 sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --start --enable
 ```
 
-If your app requires runtime arguments, use `--app-args` or an environment file (`/home/<user>/app/aia-remote.conf` is loaded automatically):
+If your app requires runtime arguments, use `--app-args` or an environment file (`/home/<user>/app/aia-remote.conf` is loaded automatically by `/home/<user>/app/run.sh`):
 
 ```
 sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --app-args "--port 8080 --sni example.com --plugins /home/jsbx1/data/plugins" --start --enable
@@ -56,6 +56,11 @@ APP_ARGS="--port 8080 --sni example.com --plugins /home/<user>/data/plugins"
 Args file example:
 ```
 sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --args-file ./aia-remote.conf --start --enable
+```
+
+Example `aia-remote.conf`:
+```
+APP_ARGS="--port 8443 --sni api.example.com --plugins /home/jsbx1/data/plugins --tls-pkcs12 /home/jsbx1/data/server.p12 --tls-password changeit"
 ```
 
 Defaults:
