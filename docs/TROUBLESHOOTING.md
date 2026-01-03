@@ -21,12 +21,14 @@ Common causes:
 - Home directory permissions too open or too closed
 - ReadWritePaths missing a required directory
 - ProtectHome hides /home and bind exceptions are missing
+- Seccomp filter missing required syscalls (e.g., chdir/fchdir)
 
 Fix:
 - Ensure /home/<user>/app and /home/<user>/data are 0700 and owned by the app user
 - Recreate with correct user and permissions
 - Keep configs under /home/<user>/app
 - Ensure unit includes BindReadOnlyPaths=/home/<user>/app and BindPaths=/home/<user>/data
+- Ensure `SystemCallFilter` includes `chdir` and `fchdir`
 
 ## Network blocked
 Symptoms:

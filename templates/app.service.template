@@ -50,7 +50,7 @@ LockPersonality=true
 RestrictRealtime=true
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 
-SystemCallFilter=@system-service @basic-io @file-system @network-io
+SystemCallFilter=@system-service @basic-io @file-system @network-io chdir fchdir
 SystemCallErrorNumber=EPERM
 
 [Install]
