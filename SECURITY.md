@@ -66,7 +66,8 @@ Each application runs under a dedicated system account (e.g., `javaapp1`) with:
 Recommended unit hardening baseline includes:
 
 - `ProtectSystem=strict` — mounts most of the filesystem read-only
-- `ProtectHome=true` — hides `/home`, `/root`, `/run/user` (except what you explicitly allow)
+- `ProtectHome=read-only` — makes `/home`, `/root`, `/run/user` read-only
+- `InaccessiblePaths=/home/*` — hides other users’ homes
 - `ReadOnlyPaths=/home/<user>` — ensures app home is read-only at runtime
 - `ReadWritePaths=/home/<user>/data` — explicit allow-list for writable directories
 - `PrivateTmp=true` — per-service `/tmp` and `/var/tmp` namespaces

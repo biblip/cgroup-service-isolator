@@ -13,7 +13,7 @@ The app directory layout is:
 - /home/<user>/app/app.env (optional)
 - /home/<user>/data (optional, writable)
 
-The `/home/<user>` directory is exposed read-only at runtime, with `/home/<user>/data` explicitly writable. Because `ProtectHome=true` hides `/home` by default, the unit uses `BindReadOnlyPaths`/`BindPaths` to explicitly expose these directories.
+The `/home/<user>` directory is exposed read-only at runtime, with `/home/<user>/data` explicitly writable. The unit sets `ProtectHome=read-only` and hides other users’ homes via `InaccessiblePaths=/home/*`, then bind-exposes the app home.
 
 ## Prerequisites (Amazon Linux 2023)
 Most `bin/` scripts require root because they manage system users and systemd units. Use `sudo` in the examples below.

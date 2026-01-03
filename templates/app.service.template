@@ -33,7 +33,8 @@ StandardOutput=journal
 StandardError=journal
 
 ProtectSystem=strict
-ProtectHome=true
+ProtectHome=read-only
+InaccessiblePaths=/home/*
 ReadOnlyPaths=/home/@USER@
 ReadWritePaths=/home/@USER@/data
 BindReadOnlyPaths=/home/@USER@
