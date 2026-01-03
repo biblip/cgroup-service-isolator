@@ -1,0 +1,54 @@
+[Unit]
+Description=Isolated Java App @APPNAME@
+After=network.target
+
+[Service]
+Type=simple
+User=@USER@
+Group=@GROUP@
+WorkingDirectory=/home/@USER@/app
+ExecStart=@EXECSTART@
+Restart=on-failure
+RestartSec=5
+UMask=0077
+
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+ProtectClock=true
+ProtectHostname=true
+ProcSubset=pid
+ProtectProc=invisible
+
+RuntimeDirectory=@APPNAME@
+RuntimeDirectoryMode=0700
+
+MemoryMax=@MEMORYMAX@
+MemorySwapMax=@MEMORYSWAPMAX@
+CPUQuota=@CPUQUOTA@
+TasksMax=@TASKSMAX@
+
+StandardOutput=journal
+StandardError=journal
+
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/@USER@/app /home/@USER@/data
+PrivateTmp=true
+NoNewPrivileges=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+SystemCallFilter=@system-service @basic-io @file-system @network-io
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target
