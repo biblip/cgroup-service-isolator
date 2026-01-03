@@ -9,7 +9,7 @@ Each Java app runs as its own Linux system user and a dedicated systemd service.
 Created apps are recorded in `/var/lib/java-sandbox-manager/registry.tsv` for inventory and listing.
 
 The app directory layout is:
-- /home/<user>/app/myprogram.jar
+- /home/<user>/app/<original-jar-name>.jar
 - /home/<user>/app/app.env (optional)
 - /home/<user>/data (optional, writable)
 
@@ -48,7 +48,7 @@ Defaults:
 - TasksMax=64
 - JVM flags: -Xms256m -Xmx320m -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=96m -XX:+ExitOnOutOfMemoryError
 
-The JAR (or binary) is copied into `/home/<user>/app` and owned by root with read-only permissions for the app user.
+The JAR (or binary) is copied into `/home/<user>/app` with its original filename and owned by root with read-only permissions for the app user.
 
 ## Logs
 

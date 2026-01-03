@@ -8,6 +8,7 @@ A hardened, scriptable toolkit to provision and operate isolated services on Ama
 - Applies strong systemd sandboxing and seccomp filters
 - Provides lifecycle and observability commands (logs, metrics, limits, OOM)
 - Supports atomic JAR or binary updates
+- Preserves original artifact filenames in the app directory
 
 ## Target platform
 - Amazon Linux 2023 (systemd, cgroups v2)

@@ -43,6 +43,7 @@ APP_NAME=""
 APP_USER=""
 JAR_SRC=""
 ARTIFACT_SRC=""
+ARTIFACT_DEST=""
 MEMORY_MAX="512M"
 MEMORY_SWAP_MAX="0"
 CPU_QUOTA="100%"
@@ -213,14 +214,16 @@ install -d -m 0755 -o root -g root "/home/${APP_USER}/app"
 install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "/home/${APP_USER}/data"
 
 if [ -n "$JAR_SRC" ]; then
-  install -m 0644 -o root -g root "$JAR_SRC" "/home/${APP_USER}/app/myprogram.jar"
-  EXEC_START="/usr/bin/java ${JVM_FLAGS} -jar /home/${APP_USER}/app/myprogram.jar"
+  ARTIFACT_DEST="/home/${APP_USER}/app/$(basename "$JAR_SRC")"
+  install -m 0644 -o root -g root "$JAR_SRC" "$ARTIFACT_DEST"
+  EXEC_START="/usr/bin/java ${JVM_FLAGS} -jar ${ARTIFACT_DEST}"
 fi
 
 if [ -n "$ARTIFACT_SRC" ]; then
-  install -m 0555 -o root -g root "$ARTIFACT_SRC" "/home/${APP_USER}/app/app.bin"
+  ARTIFACT_DEST="/home/${APP_USER}/app/$(basename "$ARTIFACT_SRC")"
+  install -m 0555 -o root -g root "$ARTIFACT_SRC" "$ARTIFACT_DEST"
   if [ -z "$EXEC_START" ]; then
-    EXEC_START="/home/${APP_USER}/app/app.bin"
+    EXEC_START="${ARTIFACT_DEST}"
   fi
 fi
 

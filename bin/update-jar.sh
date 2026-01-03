@@ -53,12 +53,19 @@ done
 
 UNIT_NAME="${APP_NAME}.service"
 USER_NAME="$(systemctl show -p User --value "$UNIT_NAME" 2>/dev/null || true)"
+EXEC_START="$(systemctl show -p ExecStart --value "$UNIT_NAME" 2>/dev/null || true)"
 
 [ -n "$USER_NAME" ] || fail "Unable to determine User for ${UNIT_NAME}. Is it installed?"
+[ -n "$EXEC_START" ] || fail "Unable to determine ExecStart for ${UNIT_NAME}"
 
-DEST_DIR="/home/${USER_NAME}/app"
-DEST_JAR="${DEST_DIR}/myprogram.jar"
-TMP_JAR="${DEST_DIR}/.myprogram.jar.tmp"
+JAR_PATH="$(echo "$EXEC_START" | sed -n 's/.*-jar[[:space:]]\\([^[:space:]]*\\).*/\\1/p')"
+if [ -z "$JAR_PATH" ]; then
+  fail "Unable to determine jar path from ExecStart; ensure -jar is used"
+fi
+
+DEST_DIR="$(dirname "$JAR_PATH")"
+DEST_JAR="$JAR_PATH"
+TMP_JAR="${DEST_DIR}/.$(basename "$JAR_PATH").tmp"
 
 if [ "$NO_STOP" = "false" ]; then
   systemctl stop "$UNIT_NAME"
