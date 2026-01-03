@@ -20,11 +20,13 @@ Common causes:
 - App jar not owned by the app user
 - Home directory permissions too open or too closed
 - ReadWritePaths missing a required directory
+- ProtectHome hides /home and bind exceptions are missing
 
 Fix:
 - Ensure /home/<user>/app and /home/<user>/data are 0700 and owned by the app user
 - Recreate with correct user and permissions
 - Keep configs under /home/<user>/app
+- Ensure unit includes BindReadOnlyPaths=/home/<user>/app and BindPaths=/home/<user>/data
 
 ## Network blocked
 Symptoms:
