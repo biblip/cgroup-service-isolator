@@ -209,16 +209,16 @@ if ! id "$APP_USER" >/dev/null 2>&1; then
 fi
 
 install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "/home/${APP_USER}"
-install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "/home/${APP_USER}/app"
+install -d -m 0755 -o root -g root "/home/${APP_USER}/app"
 install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "/home/${APP_USER}/data"
 
 if [ -n "$JAR_SRC" ]; then
-  install -m 0640 -o "$APP_USER" -g "$APP_USER" "$JAR_SRC" "/home/${APP_USER}/app/myprogram.jar"
+  install -m 0644 -o root -g root "$JAR_SRC" "/home/${APP_USER}/app/myprogram.jar"
   EXEC_START="/usr/bin/java ${JVM_FLAGS} -jar /home/${APP_USER}/app/myprogram.jar"
 fi
 
 if [ -n "$ARTIFACT_SRC" ]; then
-  install -m 0750 -o "$APP_USER" -g "$APP_USER" "$ARTIFACT_SRC" "/home/${APP_USER}/app/app.bin"
+  install -m 0555 -o root -g root "$ARTIFACT_SRC" "/home/${APP_USER}/app/app.bin"
   if [ -z "$EXEC_START" ]; then
     EXEC_START="/home/${APP_USER}/app/app.bin"
   fi

@@ -64,10 +64,10 @@ if [ "$NO_STOP" = "false" ]; then
   systemctl stop "$UNIT_NAME"
 fi
 
-install -m 0640 -o "$USER_NAME" -g "$USER_NAME" "$JAR_SRC" "$TMP_JAR"
+install -m 0644 -o root -g root "$JAR_SRC" "$TMP_JAR"
 
 mv -f "$TMP_JAR" "$DEST_JAR"
-chown "$USER_NAME":"$USER_NAME" "$DEST_JAR"
+chown root:root "$DEST_JAR"
 
 if [ "$NO_STOP" = "true" ]; then
   systemctl restart "$UNIT_NAME"

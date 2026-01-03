@@ -67,7 +67,8 @@ Recommended unit hardening baseline includes:
 
 - `ProtectSystem=strict` — mounts most of the filesystem read-only
 - `ProtectHome=true` — hides `/home`, `/root`, `/run/user` (except what you explicitly allow)
-- `ReadWritePaths=` — explicit allow-list for writable directories (should be only the app’s own home paths)
+- `ReadOnlyPaths=/home/<user>/app` — ensures binaries/config are read-only at runtime
+- `ReadWritePaths=/home/<user>/data` — explicit allow-list for writable directories
 - `PrivateTmp=true` — per-service `/tmp` and `/var/tmp` namespaces
 - `NoNewPrivileges=true` — disallows privilege escalation through execve
 - `PrivateDevices=true` — hides device nodes

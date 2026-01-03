@@ -13,6 +13,8 @@ The app directory layout is:
 - /home/<user>/app/app.env (optional)
 - /home/<user>/data (optional, writable)
 
+The `/home/<user>/app` directory is mounted read-only at runtime. Use `/home/<user>/data` for writable state.
+
 ## Prerequisites (Amazon Linux 2023)
 Most `bin/` scripts require root because they manage system users and systemd units. Use `sudo` in the examples below.
 
@@ -45,6 +47,8 @@ Defaults:
 - CPUQuota=100%
 - TasksMax=64
 - JVM flags: -Xms256m -Xmx320m -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=96m -XX:+ExitOnOutOfMemoryError
+
+The JAR (or binary) is copied into `/home/<user>/app` and owned by root with read-only permissions for the app user.
 
 ## Logs
 

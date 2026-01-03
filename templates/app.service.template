@@ -34,7 +34,8 @@ StandardError=journal
 
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/home/@USER@/app /home/@USER@/data
+ReadOnlyPaths=/home/@USER@/app
+ReadWritePaths=/home/@USER@/data
 PrivateTmp=true
 NoNewPrivileges=true
 PrivateDevices=true
