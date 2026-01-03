@@ -14,6 +14,8 @@ The app directory layout is:
 - /home/<user>/data (optional, writable)
 
 ## Prerequisites (Amazon Linux 2023)
+Most `bin/` scripts require root because they manage system users and systemd units. Use `sudo` in the examples below.
+
 Install Java and validate the path:
 
 ```
@@ -24,10 +26,10 @@ sudo dnf install -y java-17-amazon-corretto-headless
 /usr/bin/java -version
 ```
 
-Validate systemd + cgroups v2 and set up registry:
+Validate systemd + cgroups v2 and set up registry (requires sudo):
 
 ```
-./bin/install-prereqs.sh
+sudo ./bin/install-prereqs.sh
 ```
 
 Note: On some AL2023 hosts, `/sys/fs/cgroup/memory.max` may be missing at the root even when memory accounting works. The memory controller can still be enabled for slices (e.g., `/sys/fs/cgroup/system.slice/memory.max`). The prereq script accounts for this.
@@ -35,7 +37,7 @@ Note: On some AL2023 hosts, `/sys/fs/cgroup/memory.max` may be missing at the ro
 ## Create your first app (Java)
 
 ```
-./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --start --enable
+sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --start --enable
 ```
 
 Defaults:
@@ -49,20 +51,20 @@ Defaults:
 ```
 journalctl -u jsbx-app1 -f
 # or
-./bin/appctl.sh logs jsbx-app1
+sudo ./bin/appctl.sh logs jsbx-app1
 ```
 
 ## Monitoring
 
 ```
-./bin/appctl.sh metrics jsbx-app1
-./bin/appctl.sh limits jsbx-app1
+sudo ./bin/appctl.sh metrics jsbx-app1
+sudo ./bin/appctl.sh limits jsbx-app1
 ```
 
 ## Update jar
 
 ```
-./bin/update-jar.sh --name jsbx-app1 --jar ./new.jar
+sudo ./bin/update-jar.sh --name jsbx-app1 --jar ./new.jar
 ```
 
 ## Non-Java apps (Go, Rust, native binaries)
@@ -70,7 +72,7 @@ journalctl -u jsbx-app1 -f
 You can run non-Java services with the same isolation profile. Provide an artifact and exec command:
 
 ```
-./bin/create-app.sh --name native-app1 --user native1 --artifact ./myserver --exec "/home/native1/app/app.bin --config /home/native1/app/app.env" --start --enable --no-jit
+sudo ./bin/create-app.sh --name native-app1 --user native1 --artifact ./myserver --exec "/home/native1/app/app.bin --config /home/native1/app/app.env" --start --enable --no-jit
 ```
 
 Notes:
@@ -81,12 +83,12 @@ More examples:
 
 Go (static binary):
 ```
-./bin/create-app.sh --name go-api --user goapi --artifact ./go-api --exec "/home/goapi/app/app.bin --port 8080" --start --enable --no-jit
+sudo ./bin/create-app.sh --name go-api --user goapi --artifact ./go-api --exec "/home/goapi/app/app.bin --port 8080" --start --enable --no-jit
 ```
 
 Rust (static binary):
 ```
-./bin/create-app.sh --name rust-worker --user rustwk --artifact ./worker --exec "/home/rustwk/app/app.bin --queue q1" --start --enable --no-jit
+sudo ./bin/create-app.sh --name rust-worker --user rustwk --artifact ./worker --exec "/home/rustwk/app/app.bin --queue q1" --start --enable --no-jit
 ```
 
 JIT runtimes (like Node.js) should not use `--no-jit`. Use `--exec` without it.
@@ -95,8 +97,8 @@ JIT runtimes (like Node.js) should not use `--no-jit`. Use `--exec` without it.
 
 ```
 for i in 1 2 3; do
-  ./bin/create-app.sh --name jsbx-app${i} --user jsbx${i} --jar ./myprogram.jar --enable
-  ./bin/appctl.sh start jsbx-app${i}
+  sudo ./bin/create-app.sh --name jsbx-app${i} --user jsbx${i} --jar ./myprogram.jar --enable
+  sudo ./bin/appctl.sh start jsbx-app${i}
 done
 ```
 

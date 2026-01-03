@@ -16,14 +16,14 @@ A hardened, scriptable toolkit to provision and operate isolated services on Ama
 
 ## Quick start
 ```
-./bin/install-prereqs.sh
-./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --start --enable
-./bin/appctl.sh metrics jsbx-app1
+sudo ./bin/install-prereqs.sh
+sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --start --enable
+sudo ./bin/appctl.sh metrics jsbx-app1
 ```
 
 ## Non-Java apps
 ```
-./bin/create-app.sh --name go-api --user goapi --artifact ./go-api --exec "/home/goapi/app/app.bin --port 8080" --start --enable --no-jit
+sudo ./bin/create-app.sh --name go-api --user goapi --artifact ./go-api --exec "/home/goapi/app/app.bin --port 8080" --start --enable --no-jit
 ```
 
 ## Documentation

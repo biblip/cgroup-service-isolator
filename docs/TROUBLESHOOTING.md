@@ -7,7 +7,7 @@ Symptoms:
 
 Confirm:
 ```
-./bin/appctl.sh oom jsbx-app1
+sudo ./bin/appctl.sh oom jsbx-app1
 ```
 
 Fix:
