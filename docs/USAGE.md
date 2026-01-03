@@ -63,6 +63,10 @@ Example `aia-remote.conf`:
 APP_ARGS="--port 8443 --sni api.example.com --plugins /home/jsbx1/data/plugins --tls-pkcs12 /home/jsbx1/data/server.p12 --tls-password changeit"
 ```
 
+Plugins directory:
+- By default, provisioning creates `/home/<user>/data/plugins` (owned by the app user).
+- Override with `--plugins-dir /home/<user>/data/<custom>`.
+
 Defaults:
 - MemoryMax=512M, MemorySwapMax=0
 - CPUQuota=100%

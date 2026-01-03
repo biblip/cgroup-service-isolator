@@ -21,6 +21,7 @@ Options:
   --exec <command>         Override ExecStart (non-Java or custom)
   --app-args <args>        Arguments appended to ExecStart
   --args-file <path>       Read APP_ARGS from file and install to aia-remote.conf
+  --plugins-dir <path>     Create a plugins dir under /home/<user>/data (default: /home/<user>/data/plugins)
   --artifact <path>        Non-Java artifact to copy as /home/<user>/app/app.bin
   --no-jit                 Enable MemoryDenyWriteExecute (non-JIT apps only)
   --enable                 Enable service
@@ -56,6 +57,7 @@ JVM_FLAGS=""
 EXEC_START=""
 APP_ARGS=""
 ARGS_FILE=""
+PLUGINS_DIR=""
 DO_ENABLE="false"
 DO_START="false"
 DO_SYSCALL_LOG="false"
@@ -113,6 +115,10 @@ while [ $# -gt 0 ]; do
       ;;
     --args-file)
       ARGS_FILE="${2:-}"
+      shift 2
+      ;;
+    --plugins-dir)
+      PLUGINS_DIR="${2:-}"
       shift 2
       ;;
     --no-jit)
@@ -228,6 +234,16 @@ fi
 install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "/home/${APP_USER}"
 install -d -m 0755 -o root -g root "/home/${APP_USER}/app"
 install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "/home/${APP_USER}/data"
+
+if [ -z "$PLUGINS_DIR" ]; then
+  PLUGINS_DIR="/home/${APP_USER}/data/plugins"
+fi
+
+if [[ "$PLUGINS_DIR" != "/home/${APP_USER}/data/"* ]]; then
+  fail "--plugins-dir must be under /home/${APP_USER}/data"
+fi
+
+install -d -m 0700 -o "$APP_USER" -g "$APP_USER" "$PLUGINS_DIR"
 
 if [ -n "$JAR_SRC" ]; then
   ARTIFACT_DEST="/home/${APP_USER}/app/$(basename "$JAR_SRC")"
