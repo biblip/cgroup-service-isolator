@@ -59,6 +59,8 @@ Each application runs under a dedicated system account (e.g., `javaapp1`) with:
 
 **Operational note:** avoid group-sharing home directories or making them world-readable.
 
+**Enforcement note:** other users’ homes are protected by standard UNIX permissions (`0700`). With `ProtectHome=read-only`, the service cannot write to them and cannot read them without DAC permissions.
+
 ---
 
 ### 2) Filesystem isolation (systemd sandboxing)
@@ -67,7 +69,6 @@ Recommended unit hardening baseline includes:
 
 - `ProtectSystem=strict` — mounts most of the filesystem read-only
 - `ProtectHome=read-only` — makes `/home`, `/root`, `/run/user` read-only
-- `InaccessiblePaths=/home/*` — hides other users’ homes
 - `ReadOnlyPaths=/home/<user>` — ensures app home is read-only at runtime
 - `ReadWritePaths=/home/<user>/data` — explicit allow-list for writable directories
 - `PrivateTmp=true` — per-service `/tmp` and `/var/tmp` namespaces

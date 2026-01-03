@@ -34,7 +34,6 @@ StandardError=journal
 
 ProtectSystem=strict
 ProtectHome=read-only
-InaccessiblePaths=/home/*
 ReadOnlyPaths=/home/@USER@
 ReadWritePaths=/home/@USER@/data
 BindReadOnlyPaths=/home/@USER@
