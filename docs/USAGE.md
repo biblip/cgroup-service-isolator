@@ -107,6 +107,26 @@ If the unit/registry are missing but the user still exists:
 sudo ./bin/remove-app.sh --name jsbx-app1 --user jsbx1 --purge
 ```
 
+## Todero (trusted app server)
+
+Todero runs as a dedicated user without sandbox/cgroup restrictions and reads its config from `/etc/todero/todero.conf` by default.
+
+Create:
+```
+sudo ./bin/create-todero.sh --jar ./todero.jar --conf ./todero.conf --start --enable
+```
+
+Update jar:
+```
+sudo ./bin/update-todero-jar.sh --jar ./todero.jar
+```
+
+Remove:
+```
+sudo ./bin/remove-todero.sh
+sudo ./bin/remove-todero.sh --user todero --purge
+```
+
 ## Non-Java apps (Go, Rust, native binaries)
 
 You can run non-Java services with the same isolation profile. Provide an artifact and exec command:

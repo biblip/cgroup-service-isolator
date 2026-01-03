@@ -9,6 +9,7 @@ A hardened, scriptable toolkit to provision and operate isolated services on Ama
 - Provides lifecycle and observability commands (logs, metrics, limits, OOM)
 - Supports atomic JAR or binary updates
 - Preserves original artifact filenames in the app directory
+- Includes dedicated scripts for Todero (`todero.service`) with config at `/etc/todero/todero.conf`
 
 ## Target platform
 - Amazon Linux 2023 (systemd, cgroups v2)

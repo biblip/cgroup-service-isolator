@@ -63,6 +63,12 @@ Each application runs under a dedicated system account (e.g., `javaapp1`) with:
 
 ---
 
+## Todero (trusted app server)
+
+Todero is managed via dedicated scripts and runs as a dedicated non-root user without sandbox/cgroup restrictions. It reads configuration from `/etc/todero/todero.conf`.
+
+---
+
 ### 2) Filesystem isolation (systemd sandboxing)
 
 Recommended unit hardening baseline includes:

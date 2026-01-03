@@ -27,6 +27,7 @@ The architecture is intentionally simple: **bash scripts + systemd unit files**.
 2. **systemd unit template(s)** (`templates/`)
    - A hardened baseline unit definition with placeholders
    - Optional drop-in overrides for debug features (e.g., syscall logging)
+   - A Todero template for the dedicated trusted app server
 
 3. **Documentation** (`docs/`)
    - USAGE: how to install and operate the toolkit
@@ -188,6 +189,8 @@ The unit template uses placeholders such as:
 - syscall filter settings
 
 The baseline template includes strict sandboxing defaults: `ProtectSystem=strict`, `ProtectHome=read-only`, `ReadOnlyPaths=/home/<user>`, `ReadWritePaths=/home/<user>/data`, `NoNewPrivileges=true`, `PrivateDevices=true`, `CapabilityBoundingSet=`/`AmbientCapabilities=`, `RestrictSUIDSGID=true`, `ProtectClock=true`, `ProtectHostname=true`, `ProcSubset=pid`, `ProtectProc=invisible`, `RestrictNamespaces=true`, `RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX`, and a seccomp filter.
+
+The Todero template is also minimal and dedicated to `todero.service`, with configuration stored in `/etc/todero/todero.conf`.
 
 ### Per-app overrides
 
