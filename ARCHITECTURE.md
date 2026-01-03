@@ -187,7 +187,7 @@ The unit template uses placeholders such as:
 - allowed read/write paths
 - syscall filter settings
 
-The baseline template includes strict sandboxing defaults: `ProtectSystem=strict`, `ProtectHome=true`, `ReadOnlyPaths=/home/<user>/app`, `ReadWritePaths=/home/<user>/data`, `NoNewPrivileges=true`, `PrivateDevices=true`, `CapabilityBoundingSet=`/`AmbientCapabilities=`, `RestrictSUIDSGID=true`, `ProtectClock=true`, `ProtectHostname=true`, `ProcSubset=pid`, `ProtectProc=invisible`, `RestrictNamespaces=true`, `RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX`, and a seccomp filter.
+The baseline template includes strict sandboxing defaults: `ProtectSystem=strict`, `ProtectHome=true`, `ReadOnlyPaths=/home/<user>`, `ReadWritePaths=/home/<user>/data`, `NoNewPrivileges=true`, `PrivateDevices=true`, `CapabilityBoundingSet=`/`AmbientCapabilities=`, `RestrictSUIDSGID=true`, `ProtectClock=true`, `ProtectHostname=true`, `ProcSubset=pid`, `ProtectProc=invisible`, `RestrictNamespaces=true`, `RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX`, and a seccomp filter.
 
 ### Per-app overrides
 
