@@ -9,6 +9,9 @@ fail() {
 usage() {
   cat <<'USAGE'
 Usage: remove-app.sh --name <appname> [--purge]
+
+Options:
+  --user <username>    User to purge if unit/registry is missing
 USAGE
 }
 
@@ -20,12 +23,17 @@ need_cmd systemctl
 need_cmd userdel
 
 APP_NAME=""
+APP_USER=""
 DO_PURGE="false"
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --name)
       APP_NAME="${2:-}"
+      shift 2
+      ;;
+    --user)
+      APP_USER="${2:-}"
       shift 2
       ;;
     --purge)
@@ -48,7 +56,10 @@ UNIT_NAME="${APP_NAME}.service"
 UNIT_PATH="/etc/systemd/system/${UNIT_NAME}"
 DROPIN_DIR="/etc/systemd/system/${UNIT_NAME}.d"
 REGISTRY_FILE="/var/lib/java-sandbox-manager/registry.tsv"
-USER_NAME="$(systemctl show -p User --value "$UNIT_NAME" 2>/dev/null || true)"
+USER_NAME="${APP_USER:-}"
+if [ -z "$USER_NAME" ]; then
+  USER_NAME="$(systemctl show -p User --value "$UNIT_NAME" 2>/dev/null || true)"
+fi
 REGISTRY_USER=""
 
 if systemctl list-unit-files | awk '{print $1}' | grep -qx "$UNIT_NAME"; then
@@ -78,7 +89,7 @@ if [ "$DO_PURGE" = "true" ]; then
     USER_NAME="$(awk -F= '/^User=/{print $2; exit}' "$UNIT_PATH")"
   fi
   if [ -z "$USER_NAME" ]; then
-    fail "Unable to determine user for ${APP_NAME}; re-run without --purge or check unit/registry"
+    fail "Unable to determine user for ${APP_NAME}; pass --user or re-run without --purge"
   fi
   if id "$USER_NAME" >/dev/null 2>&1; then
     userdel -r "$USER_NAME"

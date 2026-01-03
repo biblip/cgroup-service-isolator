@@ -96,6 +96,17 @@ sudo ./bin/appctl.sh limits jsbx-app1
 sudo ./bin/update-jar.sh --name jsbx-app1 --jar ./new.jar
 ```
 
+## Remove an app
+
+```
+sudo ./bin/remove-app.sh --name jsbx-app1
+```
+
+If the unit/registry are missing but the user still exists:
+```
+sudo ./bin/remove-app.sh --name jsbx-app1 --user jsbx1 --purge
+```
+
 ## Non-Java apps (Go, Rust, native binaries)
 
 You can run non-Java services with the same isolation profile. Provide an artifact and exec command:
