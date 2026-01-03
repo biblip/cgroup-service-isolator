@@ -10,7 +10,7 @@ Created apps are recorded in `/var/lib/java-sandbox-manager/registry.tsv` for in
 
 The app directory layout is:
 - /home/<user>/app/<original-jar-name>.jar
-- /home/<user>/app/app.env (optional)
+- /home/<user>/app/aia-remote.conf (optional)
 - /home/<user>/data (optional, writable)
 
 The `/home/<user>` directory is exposed read-only at runtime, with `/home/<user>/data` explicitly writable. The unit sets `ProtectHome=read-only` and relies on standard UNIX permissions (`0700` homes) to prevent cross-user access.
@@ -40,6 +40,22 @@ Note: On some AL2023 hosts, `/sys/fs/cgroup/memory.max` may be missing at the ro
 
 ```
 sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --start --enable
+```
+
+If your app requires runtime arguments, use `--app-args` or an environment file (`/home/<user>/app/aia-remote.conf` is loaded automatically):
+
+```
+sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --app-args "--port 8080 --sni example.com --plugins /home/jsbx1/data/plugins" --start --enable
+```
+
+Or create `/home/<user>/app/aia-remote.conf` with (requires sudo to edit), or provide an args file:
+```
+APP_ARGS="--port 8080 --sni example.com --plugins /home/<user>/data/plugins"
+```
+
+Args file example:
+```
+sudo ./bin/create-app.sh --name jsbx-app1 --user jsbx1 --jar ./myprogram.jar --args-file ./aia-remote.conf --start --enable
 ```
 
 Defaults:

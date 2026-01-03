@@ -19,6 +19,8 @@ Options:
   --jvm-xmx <size>         Default: 320m (uses fixed JVM policy)
   --jvm-flags <flags>      Override full JVM flags
   --exec <command>         Override ExecStart (non-Java or custom)
+  --app-args <args>        Arguments appended to ExecStart
+  --args-file <path>       Read APP_ARGS from file and install to aia-remote.conf
   --artifact <path>        Non-Java artifact to copy as /home/<user>/app/app.bin
   --no-jit                 Enable MemoryDenyWriteExecute (non-JIT apps only)
   --enable                 Enable service
@@ -51,6 +53,8 @@ TASKS_MAX="64"
 JVM_XMX="320m"
 JVM_FLAGS=""
 EXEC_START=""
+APP_ARGS=""
+ARGS_FILE=""
 DO_ENABLE="false"
 DO_START="false"
 DO_SYSCALL_LOG="false"
@@ -102,6 +106,14 @@ while [ $# -gt 0 ]; do
       EXEC_START="${2:-}"
       shift 2
       ;;
+    --app-args)
+      APP_ARGS="${2:-}"
+      shift 2
+      ;;
+    --args-file)
+      ARGS_FILE="${2:-}"
+      shift 2
+      ;;
     --no-jit)
       DO_NO_JIT="true"
       shift
@@ -130,6 +142,9 @@ done
 
 [ -n "$APP_NAME" ] || fail "--name is required"
 [ -n "$JAR_SRC" ] || [ -n "$ARTIFACT_SRC" ] || [ -n "$EXEC_START" ] || fail "Provide --jar (Java) or --artifact/--exec (non-Java)"
+if [ -n "$ARGS_FILE" ] && [ ! -f "$ARGS_FILE" ]; then
+  fail "Args file not found: $ARGS_FILE"
+fi
 
 if [ -n "$JAR_SRC" ] && [ -n "$ARTIFACT_SRC" ]; then
   fail "Use either --jar or --artifact, not both"
@@ -157,6 +172,10 @@ fi
 
 if [ -z "$JVM_FLAGS" ]; then
   JVM_FLAGS="-Xms256m -Xmx${JVM_XMX} -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=96m -XX:+ExitOnOutOfMemoryError"
+fi
+
+if [ -z "$APP_ARGS" ]; then
+  APP_ARGS='${APP_ARGS}'
 fi
 
 if [ -n "$EXEC_START" ] && [ -n "$JAR_SRC" ]; then
@@ -227,6 +246,10 @@ if [ -n "$ARTIFACT_SRC" ]; then
   fi
 fi
 
+if [ -n "$ARGS_FILE" ]; then
+  install -m 0644 -o root -g root "$ARGS_FILE" "/home/${APP_USER}/app/aia-remote.conf"
+fi
+
 if [ -z "$EXEC_START" ]; then
   fail "Unable to determine ExecStart; provide --jar or --exec/--artifact"
 fi
@@ -245,6 +268,7 @@ sed \
   -e "s|@CPUQUOTA@|${CPU_QUOTA}|g" \
   -e "s|@TASKSMAX@|${TASKS_MAX}|g" \
   -e "s|@EXECSTART@|${EXEC_START}|g" \
+  -e "s|@APPARGS@|${APP_ARGS}|g" \
   templates/app.service.template > "$TMP_UNIT"
 install -m 0644 "$TMP_UNIT" "$UNIT_PATH"
 rm -f "$TMP_UNIT"
