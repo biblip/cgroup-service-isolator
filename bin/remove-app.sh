@@ -62,6 +62,10 @@ if [ -z "$USER_NAME" ]; then
 fi
 REGISTRY_USER=""
 
+if systemctl is-active --quiet "$UNIT_NAME"; then
+  fail "Service ${UNIT_NAME} is running; stop it before removal (use: systemctl stop ${UNIT_NAME})"
+fi
+
 if systemctl list-unit-files | awk '{print $1}' | grep -qx "$UNIT_NAME"; then
   systemctl stop "$UNIT_NAME" || true
   systemctl disable "$UNIT_NAME" || true
