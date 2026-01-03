@@ -74,6 +74,9 @@ if [ "$DO_PURGE" = "true" ]; then
   if [ -z "$USER_NAME" ] && [ -n "$REGISTRY_USER" ]; then
     USER_NAME="$REGISTRY_USER"
   fi
+  if [ -z "$USER_NAME" ] && [ -f "$UNIT_PATH" ]; then
+    USER_NAME="$(awk -F= '/^User=/{print $2; exit}' "$UNIT_PATH")"
+  fi
   if [ -z "$USER_NAME" ]; then
     fail "Unable to determine user for ${APP_NAME}; re-run without --purge or check unit/registry"
   fi
