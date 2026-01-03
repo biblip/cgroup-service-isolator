@@ -11,7 +11,7 @@ A hardened, scriptable toolkit to provision and operate isolated services on Ama
 
 ## Target platform
 - Amazon Linux 2023 (systemd, cgroups v2)
-- arm64 (Graviton)
+- arm64 (Graviton) primary target; also works on x86_64 with the same systemd/cgroups v2 requirements
 - Java installed system-wide at `/usr/bin/java`
 
 ## Quick start

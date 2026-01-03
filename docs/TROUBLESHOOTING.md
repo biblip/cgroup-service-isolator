@@ -66,6 +66,14 @@ Fix:
 - Ensure systemd is PID 1
 - Verify cgroup v2 is enabled on Amazon Linux 2023
 
+## memory.max missing at cgroup root
+Symptoms:
+- /sys/fs/cgroup/memory.max missing, but cgroup v2 is present
+
+Notes:
+- On some AL2023 hosts, the root cgroup may not expose memory.max even when the memory controller is enabled for slices.
+- Check for `/sys/fs/cgroup/system.slice/memory.max` and verify `memory` is listed in `/sys/fs/cgroup/cgroup.controllers`.
+
 ## Java missing
 Symptoms:
 - /usr/bin/java not found

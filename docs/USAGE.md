@@ -30,6 +30,8 @@ Validate systemd + cgroups v2 and set up registry:
 ./bin/install-prereqs.sh
 ```
 
+Note: On some AL2023 hosts, `/sys/fs/cgroup/memory.max` may be missing at the root even when memory accounting works. The memory controller can still be enabled for slices (e.g., `/sys/fs/cgroup/system.slice/memory.max`). The prereq script accounts for this.
+
 ## Create your first app (Java)
 
 ```
