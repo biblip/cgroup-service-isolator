@@ -10,6 +10,9 @@ WorkingDirectory=/home/@USER@/app
 ExecStart=/usr/bin/java -jar /home/@USER@/app/todero.jar
 Restart=on-failure
 RestartSec=5
+NoNewPrivileges=false
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 
 StandardOutput=journal
 StandardError=journal
